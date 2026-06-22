@@ -630,48 +630,24 @@
       });
       container.innerHTML = html;
 
-      container.querySelectorAll('.btn-live-small').forEach(btn => {
-
-  btn.addEventListener('click', function(e) {
-
-    e.stopPropagation();
-
-    const id = this.dataset.liveId;
-    const parts = id.split('-');
-
-    const dayKey = parts[1];
-    const idx = parseInt(parts[2]);
-
-    // DIA 1 -> abre automaticamente o Youtube
-    if(dayKey === 'day1'){
-
-      window.open(
-        'https://www.youtube.com/watch?v=D6FtP7ngQlY',
-        '_blank'
-      );
-
-      return;
+       container.querySelectorAll('.btn-live-small').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const id = this.dataset.liveId;
+          const parts = id.split('-');
+          const dayKey = parts[1];
+          const idx = parseInt(parts[2]);
+          const dayData = data[dayKey];
+          if (!dayData) return;
+          const item = dayData.items[idx];
+          if (!item) return;
+          const link = prompt(`Insira o link de transmissão para:\n"${item.title}"\n\n(Deixe em branco para cancelar)`, 'https://exemplo.com/live');
+          if (link && link.trim() !== '') {
+            window.open(link.trim(), '_blank');
+          }
+        });
+      });
     }
-
-    // DIA 2 E 3 -> deixa em aberto
-    const dayData = data[dayKey];
-    if (!dayData) return;
-
-    const item = dayData.items[idx];
-    if (!item) return;
-
-    const link = prompt(
-      `Insira o link de transmissão para:\n"${item.title}"`,
-      'https://exemplo.com/live'
-    );
-
-    if (link && link.trim() !== '') {
-      window.open(link.trim(), '_blank');
-    }
-
-  });
-
-});
 
     // ===== INICIALIZA =====
     renderDay('day1', 'programDay1');
